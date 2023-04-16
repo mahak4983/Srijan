@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/codeclub.png" title="codeclub">
+    <title>Sherlocked Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url("img/login.jpeg");
+            /* you can also use a web URL or base64 encoded image data */
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* this will make the image cover the entire background area */
+        }
+
+        form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* this will create a semi-transparent white background for the form */
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <form>
+        <label for="question">Uh- Oh! You are locked! ☹️ But you are in sherlocked so we hope you can UNLOCK 😁. Your password in build by passing your teamname through an algorithm. Want to know which algorithm? Solve <a target="_blank" href="http://localhost:3000/login_puzzle">this puzzle</a> first. Then pass your team name through this algorithm. THAT IS YOUR PASSWORD!
+        </label>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username here. It is your teamname.">
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" placeholder="Find it out. Shall we tell you everything?">
+        <input type="submit" value="Submit">
+    </form>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="wrong_creds" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <span></span>
+            <strong class="me-auto text-danger">☹️ Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            Wrong Credentials!
+          </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function clueAfter10mins(clue) {
+            setTimeout(function () { alert(clue); }, 600000);
+        }
+        clueAfter10mins("Hint: MD5");
+        document.querySelector("form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var payload = {
+                username: e.target.elements["username"].value,
+                password: e.target.elements["password"].value
+            };
+            fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+            })
+            .then(response => {
+            if (!response.ok) {
+                const toast_wrong_cred = document.querySelector('#wrong_creds');
+                const toast_wc = new bootstrap.Toast(toast_wrong_cred);
+                toast_wc.show();
+            }
+            return response.json();
+            })
+            .then(data => {
+            window.open("http://localhost:3000/level1","_self");
+            })
+            .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+            const toast_net_err = document.querySelector('#wrong_creds');
+            const toast_ne = new bootstrap.Toast(toast_net_err);
+            toast_ne.show();
+            });
+
+            })
+    </script>
+</body>
+
+</html>

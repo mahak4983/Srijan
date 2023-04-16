@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="img/codeclub.png" title="codeclub">
+    <title>Sherlocked Level 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <style>
+        body {
+            background-image: url("img/L2.jpg");
+            /* you can also use a web URL or base64 encoded image data */
+            background-repeat: no-repeat;
+            background-size: cover;
+            /* this will make the image cover the entire background area */
+        }
+
+        form {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            /* this will create a semi-transparent white background for the form */
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <label for="question">Sherlock Holmes, the brilliant detective, was called to investigate a gruesome murder scene. As he combed through the
+        evidence, his sharp eyes caught something peculiar. There was a small slip of paper tucked away in the pocket of the
+        victim's coat. Sherlock carefully retrieved it and examined it closely. Clue that he received is as follows: <br><br>bojtxbs uijt cfijoe nbtufsnjoe uif jt<br><br>It was a cryptic clue, written in a mysterious
+        code. Despite the complexity of the message, Sherlock was able to decipher its meaning. This single clue would prove to
+        be the key that unlocked the secrets of the case and led him down a path to solve the mystery of the murder. Do you have what it takes to decipher the clue?
+        </label>
+
+
+        <label for="answer">Answer:</label>
+        <input type="text" id="answer" name="answer" placeholder="Enter your answer here">
+
+        <input type="submit" value="Submit">
+    </form>
+    <%- include('common/common_err_toast') %>
+    <!-- Modal -->
+    <%- include('common/modal', {headingTitle: "Level 2"}) %>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="js/common.js"></script>
+    <script src="js/__extra_styles_2.js"></script>
+    <script type="text/javascript">
+        document.querySelector("form").addEventListener("submit", function(e) {
+           e.preventDefault();
+           var payload = {
+               answer: e.target.elements["answer"].value,
+               level: 2
+           };
+           fetch('http://localhost:3000/answer', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(payload)
+           })
+           .then(response => {
+           if (!response.ok) {
+               const toast_wrong_ans = document.querySelector('#wrong_ans');
+               const toast_wa = new bootstrap.Toast(toast_wrong_ans);
+               toast_wa.show();
+           }
+           return response.json();
+           })
+           .then(data => {
+           console.log(data)
+           if(data.result=="correct") {
+               window.open("http://localhost:3000/level3", "_self");
+           } else if (data.result=="incorrect") {
+               const toast_wrong_ans = document.querySelector('#wrong_ans');
+               const toast_wa = new bootstrap.Toast(toast_wrong_ans);
+               toast_wa.show();
+           } else {
+               const toast_wrong_ans = document.querySelector('#wrong_ans');
+               const toast_wa = new bootstrap.Toast(toast_wrong_ans);
+               toast_wa.show();
+           }
+           })
+           .catch(error => {
+           console.error('There was a problem with the fetch operation:', error);
+           const toast_wrong_ans = document.querySelector('#wrong_ans');
+           const toast_wa = new bootstrap.Toast(toast_wrong_ans);
+           toast_wa.show();
+           });
+       });
+   </script>
+</body>
+
+</html>
