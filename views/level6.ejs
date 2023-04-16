@@ -87,7 +87,7 @@
                answer: e.target.elements["answer"].value,
                level: 6
            };
-           fetch('http://localhost:3000/answer', {
+           fetch('https://thankful-sneakers-fly.cyclic.app/answer', {
                method: 'POST',
                headers: {
                    'Content-Type': 'application/json'
@@ -105,7 +105,7 @@
            .then(data => {
            console.log(data)
            if(data.result=="correct") {
-               window.open("http://localhost:3000/congratulations", "_self");
+               window.open("https://thankful-sneakers-fly.cyclic.app/congratulations", "_self");
            } else if (data.result=="incorrect") {
                const toast_wrong_ans = document.querySelector('#wrong_ans');
                const toast_wa = new bootstrap.Toast(toast_wrong_ans);
